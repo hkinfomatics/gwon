@@ -888,6 +888,12 @@
         color: var(--text-main);
       }
 
+      table.unified-matrix-table td:first-child {
+        white-space: nowrap;
+        text-align: left;
+        padding-left: 12px;
+      }
+
       table.unified-matrix-table tr.grade-header-row th {
         background: #e6f2eb;
         color: var(--green-700);
@@ -1732,12 +1738,170 @@
         font-weight: 700;
       }
 
+      /* ==================== PDF EXPORT DEDICATED MODE ==================== */
+      /* Applied temporarily during PDF generation to fill landscape A4 margins and maximize text readability */
+      body.pdf-export-active {
+        background: #ffffff !important;
+      }
+
+      body.pdf-export-active .app-wrapper {
+        max-width: none !important;
+        width: 1600px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      body.pdf-export-active #admin-stats-report-area {
+        width: 1600px !important;
+        max-width: 1600px !important;
+        min-width: 1600px !important;
+        background: #ffffff !important;
+        padding: 4px 6px !important;
+        box-sizing: border-box !important;
+      }
+
+      body.pdf-export-active #print-report-header {
+        display: block !important;
+        margin-bottom: 6px !important;
+        padding-bottom: 5px !important;
+        border-bottom: 2px solid var(--green-600) !important;
+      }
+
+      body.pdf-export-active #print-report-header h2 {
+        font-size: 1.5rem !important;
+        font-weight: 800 !important;
+        color: var(--green-800) !important;
+      }
+
+      body.pdf-export-active .admin-summary-grid {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 8px !important;
+        margin-bottom: 8px !important;
+      }
+
+      body.pdf-export-active .admin-stat-card {
+        padding: 10px 14px !important;
+        border: 1px solid #c2decb !important;
+        box-shadow: none !important;
+        border-radius: 6px !important;
+        background: #ffffff !important;
+      }
+
+      body.pdf-export-active .admin-stat-title {
+        font-size: 0.96rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 2px !important;
+      }
+
+      body.pdf-export-active .admin-stat-value {
+        font-size: 2.15rem !important;
+        font-weight: 800 !important;
+      }
+
+      body.pdf-export-active .admin-stat-unit {
+        font-size: 1.05rem !important;
+        font-weight: 700 !important;
+      }
+
+      body.pdf-export-active .admin-stat-desc {
+        font-size: 0.82rem !important;
+      }
+
+      /* Hide interactive buttons that should not appear on printed document */
+      body.pdf-export-active .chart-tab-group,
+      body.pdf-export-active .chart-grade-filter,
+      body.pdf-export-active #btn-matrix-edit-cap {
+        display: none !important;
+      }
+
+      body.pdf-export-active .admin-card {
+        border: 1px solid #c2decb !important;
+        box-shadow: none !important;
+        margin-bottom: 8px !important;
+        padding: 10px 14px !important;
+        border-radius: 6px !important;
+        background: #ffffff !important;
+      }
+
+      body.pdf-export-active .admin-card-title {
+        font-size: 1.05rem !important;
+        font-weight: 800 !important;
+        margin-bottom: 6px !important;
+      }
+
+      body.pdf-export-active .chart-summary-bar {
+        margin-bottom: 6px !important;
+        padding: 6px 12px !important;
+      }
+
+      body.pdf-export-active .chart-canvas-container {
+        padding: 4px 4px !important;
+        min-height: 210px !important;
+      }
+
+      body.pdf-export-active .matrix-table-wrap {
+        overflow: visible !important;
+        border: 1.5px solid #bddbc8 !important;
+        border-radius: 6px !important;
+      }
+
+      body.pdf-export-active table.unified-matrix-table {
+        width: 100% !important;
+        font-size: 0.98rem !important;
+        border-collapse: collapse !important;
+      }
+
+      body.pdf-export-active table.unified-matrix-table th {
+        padding: 8px 4px !important;
+        font-size: 0.96rem !important;
+        font-weight: 800 !important;
+        background: #eef7f1 !important;
+        border-bottom: 1.5px solid #bddbc8 !important;
+      }
+
+      body.pdf-export-active table.unified-matrix-table td {
+        padding: 7px 4px !important;
+        font-size: 0.96rem !important;
+        font-weight: 600 !important;
+        border-bottom: 1px solid #e1efe5 !important;
+      }
+
+      body.pdf-export-active .rate-badge {
+        font-size: 0.9rem !important;
+        padding: 3px 8px !important;
+        font-weight: 800 !important;
+      }
+
+      body.pdf-export-active table.unified-matrix-table tr.total-tr td {
+        font-size: 1.02rem !important;
+        padding: 8px 12px !important;
+      }
+
+      body.pdf-export-active .total-tr strong {
+        font-size: 1.05rem !important;
+      }
+
       @media print {
+        @page {
+          size: A4 landscape;
+          margin: 7mm;
+        }
+
         body {
           background: #ffffff !important;
           color: #111827 !important;
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+
+        .app-wrapper {
+          max-width: none !important;
+          width: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
         }
 
         .app-header,
@@ -1748,12 +1912,17 @@
         #admin-attendees-card,
         .modal-backdrop,
         .toast-popup,
-        #view-parent {
+        #view-parent,
+        .chart-tab-group,
+        .chart-grade-filter {
           display: none !important;
         }
 
         #view-admin {
           display: block !important;
+          width: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
         }
 
         .print-report-header {
@@ -1762,6 +1931,7 @@
 
         .admin-stats-report-area {
           width: 100% !important;
+          max-width: none !important;
           background: #fff !important;
         }
 
@@ -1774,6 +1944,7 @@
         .admin-card {
           box-shadow: none !important;
           border: 1px solid #d1e2d6 !important;
+          page-break-inside: avoid;
         }
 
         .matrix-table-wrap {
@@ -1782,7 +1953,17 @@
 
         .unified-matrix-table {
           width: 100% !important;
-          font-size: 0.82rem !important;
+          font-size: 0.95rem !important;
+        }
+
+        .unified-matrix-table th {
+          font-size: 0.95rem !important;
+          padding: 8px 6px !important;
+        }
+
+        .unified-matrix-table td {
+          font-size: 0.95rem !important;
+          padding: 8px 6px !important;
         }
       }
 
@@ -2175,7 +2356,7 @@
             <!-- Overall Summary Cards with Attendance Rate -->
             <div class="admin-summary-grid">
               <div class="admin-stat-card featured" id="admin-card-rate">
-                <div class="admin-stat-title">전체 학생 참석률 (실시간)</div>
+                <div class="admin-stat-title">전체 학부모 참석률 (실시간)</div>
                 <div>
                   <span class="admin-stat-value" id="stat-total-rate">0.0</span>
                   <span class="admin-stat-unit">%</span>
@@ -2184,12 +2365,12 @@
               </div>
 
               <div class="admin-stat-card" id="admin-card-unique-students">
-                <div class="admin-stat-title">참석 학생 수 (정원 대비)</div>
+                <div class="admin-stat-title">참석 학부모 수 (정원 대비)</div>
                 <div>
                   <span class="admin-stat-value" id="stat-unique-students">0</span>
                   <span class="admin-stat-unit" id="stat-unique-students-unit">/ 675명</span>
                 </div>
-                <div class="admin-stat-desc">중복 제외 참석 학생 가구 수</div>
+                <div class="admin-stat-desc">중복 제외 참석 학부모(가구) 수</div>
               </div>
 
               <div class="admin-stat-card" id="admin-card-total-attendees">
@@ -2226,12 +2407,12 @@
                 <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                   <!-- View Mode Selector -->
                   <div class="chart-tab-group" role="tablist">
-                    <button type="button" class="btn-chart-tab active" data-chart-mode="rate" id="tab-chart-rate">참석률 (%) 추이</button>
-                    <button type="button" class="btn-chart-tab" data-chart-mode="count" id="tab-chart-count">참석 학생 vs 정원</button>
-                    <button type="button" class="btn-chart-tab" data-chart-mode="grade" id="tab-chart-grade">학년별 종합 분석</button>
+                    <button type="button" class="btn-chart-tab active" data-chart-mode="grade" id="tab-chart-grade">학년별 종합 분석</button>
+                    <button type="button" class="btn-chart-tab" data-chart-mode="count" id="tab-chart-count">참석 가구수 VS 정원</button>
+                    <button type="button" class="btn-chart-tab" data-chart-mode="rate" id="tab-chart-rate">참석률 (%) 추이</button>
                   </div>
                   <!-- Grade Filter -->
-                  <div class="chart-grade-filter" id="chart-grade-filter">
+                  <div class="chart-grade-filter" id="chart-grade-filter" style="display:none;">
                     <button type="button" class="btn-chart-filter active" data-grade-filter="all">전체</button>
                     <button type="button" class="btn-chart-filter" data-grade-filter="1">1학년</button>
                     <button type="button" class="btn-chart-filter" data-grade-filter="2">2학년</button>
@@ -2247,7 +2428,7 @@
                   <div class="chart-gauge-meta">
                     <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">전교 종합 실시간 참석률</div>
                     <div style="font-size:1.4rem; font-weight:800; color:var(--green-700);" id="chart-gauge-rate-text">0.0%</div>
-                    <div style="font-size:0.75rem; color:var(--text-sub);" id="chart-gauge-sub-text">참석 0명 / 정원 675명</div>
+                    <div style="font-size:0.75rem; color:var(--text-sub);" id="chart-gauge-sub-text">참석 0가구 / 정원 675명</div>
                   </div>
                 </div>
                 <!-- Grade-by-grade Progress Cards -->

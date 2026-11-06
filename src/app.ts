@@ -126,7 +126,7 @@ const d3TrendChart = document.getElementById('d3-trend-chart') as HTMLElement | 
 const d3ChartTooltip = document.getElementById('d3-chart-tooltip') as HTMLElement | null;
 const chartLegendRow = document.getElementById('chart-legend-row') as HTMLElement | null;
 
-let activeChartMode: 'rate' | 'count' | 'grade' = 'rate';
+let activeChartMode: 'rate' | 'count' | 'grade' = 'grade';
 let activeChartGradeFilter: 'all' | 1 | 2 | 3 = 'all';
 
 // Modals
@@ -1038,7 +1038,7 @@ function renderAdminCharts() {
     chartGaugeRateText.textContent = `${overallRate.toFixed(1)}%`;
   }
   if (chartGaugeSubText) {
-    chartGaugeSubText.textContent = `참석 ${uniqueCount.toLocaleString()}명 / 정원 ${totalCap.toLocaleString()}명`;
+    chartGaugeSubText.textContent = `참석 ${uniqueCount.toLocaleString()}가구 / 정원 ${totalCap.toLocaleString()}명`;
   }
 
   // 2. Grade-by-grade Summary Progress Cards
@@ -1072,7 +1072,7 @@ function renderAdminCharts() {
             <div class="chart-grade-bar-fill" style="width:${Math.min(100, stat.rate)}%; background:${stat.rate >= 70 ? 'var(--green-700)' : stat.rate >= 30 ? 'var(--green-500)' : '#f59e0b'};"></div>
           </div>
           <div class="chart-grade-card-sub">
-            <span>참석 <strong>${stat.students}</strong>명</span>
+            <span>참석 <strong>${stat.students}</strong>가구</span>
             <span>정원 ${stat.capacity}명</span>
           </div>
         </div>
@@ -1126,8 +1126,9 @@ function renderAdminCharts() {
 
   const containerRect = d3TrendChart.getBoundingClientRect();
   const width = Math.max(380, containerRect.width || 720);
-  const height = 310;
-  const margin = { top: 32, right: 30, bottom: 44, left: 45 };
+  const isPdf = document.body.classList.contains('pdf-export-active');
+  const height = isPdf ? 220 : 310;
+  const margin = { top: isPdf ? 24 : 32, right: 30, bottom: isPdf ? 36 : 44, left: 45 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
@@ -1260,7 +1261,7 @@ function renderAdminCharts() {
         showTooltip(event, `
           <div class="tt-title"><span>🏫</span> ${d.fullLabel}</div>
           <div class="tt-row"><span>참석률:</span> <strong>${d.rate.toFixed(1)}%</strong></div>
-          <div class="tt-row"><span>참석 학생:</span> <strong>${d.uniqueStudents}명</strong> / ${d.capacity}명</div>
+          <div class="tt-row"><span>참석 가구수:</span> <strong>${d.uniqueStudents}가구</strong> / 정원 ${d.capacity}명</div>
           <div class="tt-row"><span>학부모 방문:</span> <strong>${d.parents}명</strong></div>
         `);
       })
@@ -1268,7 +1269,7 @@ function renderAdminCharts() {
         showTooltip(event, `
           <div class="tt-title"><span>🏫</span> ${d.fullLabel}</div>
           <div class="tt-row"><span>참석률:</span> <strong>${d.rate.toFixed(1)}%</strong></div>
-          <div class="tt-row"><span>참석 학생:</span> <strong>${d.uniqueStudents}명</strong> / ${d.capacity}명</div>
+          <div class="tt-row"><span>참석 가구수:</span> <strong>${d.uniqueStudents}가구</strong> / 정원 ${d.capacity}명</div>
           <div class="tt-row"><span>학부모 방문:</span> <strong>${d.parents}명</strong></div>
         `);
       })
@@ -1310,7 +1311,7 @@ function renderAdminCharts() {
           showTooltip(event, `
             <div class="tt-title"><span>📈</span> ${d.fullLabel} 참여 추세</div>
             <div class="tt-row"><span>참석률:</span> <strong>${d.rate.toFixed(1)}%</strong></div>
-            <div class="tt-row"><span>참석 학생:</span> <strong>${d.uniqueStudents}명</strong> / ${d.capacity}명</div>
+            <div class="tt-row"><span>참석 가구수:</span> <strong>${d.uniqueStudents}가구</strong> / 정원 ${d.capacity}명</div>
             <div class="tt-row"><span>학부모 방문:</span> <strong>${d.parents}명</strong></div>
           `);
         })
@@ -1318,7 +1319,7 @@ function renderAdminCharts() {
           showTooltip(event, `
             <div class="tt-title"><span>📈</span> ${d.fullLabel} 참여 추세</div>
             <div class="tt-row"><span>참석률:</span> <strong>${d.rate.toFixed(1)}%</strong></div>
-            <div class="tt-row"><span>참석 학생:</span> <strong>${d.uniqueStudents}명</strong> / ${d.capacity}명</div>
+            <div class="tt-row"><span>참석 가구수:</span> <strong>${d.uniqueStudents}가구</strong> / 정원 ${d.capacity}명</div>
             <div class="tt-row"><span>학부모 방문:</span> <strong>${d.parents}명</strong></div>
           `);
         })
@@ -1431,7 +1432,7 @@ function renderAdminCharts() {
         d3.select(this).attr('opacity', 1).attr('fill', '#1b4332');
         showTooltip(event, `
           <div class="tt-title"><span>👥</span> ${d.fullLabel} 출석 현황</div>
-          <div class="tt-row"><span>참석 학생:</span> <strong>${d.uniqueStudents}명</strong> / 정원 ${d.capacity}명</div>
+          <div class="tt-row"><span>참석 가구수:</span> <strong>${d.uniqueStudents}가구</strong> / 정원 ${d.capacity}명</div>
           <div class="tt-row"><span>참석률:</span> <strong>${d.rate.toFixed(1)}%</strong></div>
           <div class="tt-row"><span>학부모 방문:</span> <strong>${d.parents}명</strong></div>
         `);
@@ -1439,7 +1440,7 @@ function renderAdminCharts() {
       .on('mousemove', function(event, d) {
         showTooltip(event, `
           <div class="tt-title"><span>👥</span> ${d.fullLabel} 출석 현황</div>
-          <div class="tt-row"><span>참석 학생:</span> <strong>${d.uniqueStudents}명</strong> / 정원 ${d.capacity}명</div>
+          <div class="tt-row"><span>참석 가구수:</span> <strong>${d.uniqueStudents}가구</strong> / 정원 ${d.capacity}명</div>
           <div class="tt-row"><span>참석률:</span> <strong>${d.rate.toFixed(1)}%</strong></div>
           <div class="tt-row"><span>학부모 방문:</span> <strong>${d.parents}명</strong></div>
         `);
@@ -1466,7 +1467,7 @@ function renderAdminCharts() {
     // Update Legend
     if (chartLegendRow) {
       chartLegendRow.innerHTML = `
-        <div class="chart-legend-item"><span class="chart-legend-color" style="background:#2d6a4f;"></span>참석 학생 수 (가구수)</div>
+        <div class="chart-legend-item"><span class="chart-legend-color" style="background:#2d6a4f;"></span>참석 가구수</div>
         <div class="chart-legend-item"><span class="chart-legend-color" style="background:#edf5f0; border:1px solid #c8e0d2;"></span>학급 학생 정원</div>
         <div class="chart-legend-item" style="color:var(--text-sub);">💡 막대를 마우스로 가리키면 세부 학생 및 학부모 참석 인원이 표시됩니다.</div>
       `;
@@ -1563,7 +1564,7 @@ function renderAdminCharts() {
           showTooltip(event, `
             <div class="tt-title"><span>🎓</span> ${d.label} 통계 상세</div>
             <div class="tt-row"><span>총 학생 정원:</span> <strong>${d.capacity}명</strong></div>
-            <div class="tt-row"><span>참석 학생 수:</span> <strong>${d.students}명</strong></div>
+            <div class="tt-row"><span>참석 가구수:</span> <strong>${d.students}가구</strong></div>
             <div class="tt-row"><span>참석률:</span> <strong>${d.rate.toFixed(1)}%</strong></div>
             <div class="tt-row"><span>참석 학부모 수:</span> <strong>${d.parents}명</strong></div>
           `);
@@ -1572,7 +1573,7 @@ function renderAdminCharts() {
           showTooltip(event, `
             <div class="tt-title"><span>🎓</span> ${d.label} 통계 상세</div>
             <div class="tt-row"><span>총 학생 정원:</span> <strong>${d.capacity}명</strong></div>
-            <div class="tt-row"><span>참석 학생 수:</span> <strong>${d.students}명</strong></div>
+            <div class="tt-row"><span>참석 가구수:</span> <strong>${d.students}가구</strong></div>
             <div class="tt-row"><span>참석률:</span> <strong>${d.rate.toFixed(1)}%</strong></div>
             <div class="tt-row"><span>참석 학부모 수:</span> <strong>${d.parents}명</strong></div>
           `);
@@ -1607,7 +1608,7 @@ function renderAdminCharts() {
     if (chartLegendRow) {
       chartLegendRow.innerHTML = `
         <div class="chart-legend-item"><span class="chart-legend-color" style="background:#d8e8dc;"></span>총 학생 정원</div>
-        <div class="chart-legend-item"><span class="chart-legend-color" style="background:#24583c;"></span>참석 학생 수 (가구수)</div>
+        <div class="chart-legend-item"><span class="chart-legend-color" style="background:#24583c;"></span>참석 가구수</div>
         <div class="chart-legend-item"><span class="chart-legend-color" style="background:#2563eb;"></span>참석 학부모 수</div>
       `;
     }
@@ -1615,6 +1616,13 @@ function renderAdminCharts() {
 }
 
 function initChartControls() {
+  const filterWrap = document.getElementById('chart-grade-filter');
+  const updateFilterVisibility = () => {
+    if (filterWrap) {
+      filterWrap.style.display = activeChartMode === 'grade' ? 'none' : 'flex';
+    }
+  };
+
   const modeTabs = document.querySelectorAll<HTMLButtonElement>('.btn-chart-tab');
   modeTabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -1622,6 +1630,7 @@ function initChartControls() {
       if (mode) {
         activeChartMode = mode;
         modeTabs.forEach(t => t.classList.toggle('active', t === tab));
+        updateFilterVisibility();
         renderAdminCharts();
       }
     });
@@ -1641,6 +1650,8 @@ function initChartControls() {
     });
   });
 
+  updateFilterVisibility();
+
   if (d3TrendChart) {
     let resizeTimer: number | null = null;
     window.addEventListener('resize', () => {
@@ -1658,7 +1669,7 @@ function renderUnifiedMatrixTable() {
   const maxCols = getMaxClassAcrossGrades();
 
   if (allGradeMatrixThead) {
-    let theadHtml = '<tr><th style="width: 110px;">학년 구분</th>';
+    let theadHtml = '<tr><th style="width: 145px; white-space:nowrap;">학년 구분</th>';
     for (let c = 1; c <= maxCols; c++) {
       theadHtml += `<th>${c}반</th>`;
     }
@@ -1683,9 +1694,9 @@ function renderUnifiedMatrixTable() {
     let gradeStudentsSum = 0;
     let gradeCapSum = 0;
 
-    let trParents = `<td><strong>${gradeName} (학부모)</strong></td>`;
-    let trStudents = `<td style="color:var(--text-muted); font-size:0.82rem;"><strong>${gradeName} (학생 / 정원)</strong></td>`;
-    let trRate = `<td style="color:var(--green-700); font-size:0.82rem; background:#fafdfb;"><strong>${gradeName} (참석률)</strong></td>`;
+    let trParents = `<td style="white-space:nowrap;"><strong>${gradeName} (참석 학부모 수)</strong></td>`;
+    let trStudents = `<td style="color:var(--text-muted); font-size:0.82rem; white-space:nowrap;"><strong>${gradeName} (참석 가구 수/정원)</strong></td>`;
+    let trRate = `<td style="color:var(--green-700); font-size:0.82rem; background:#fafdfb; white-space:nowrap;"><strong>${gradeName} (참석률)</strong></td>`;
 
     for (let c = 1; c <= maxCols; c++) {
       if (c <= numClasses) {
@@ -1746,12 +1757,12 @@ function renderUnifiedMatrixTable() {
     <td colspan="${maxCols + 1}" style="background:#eaf4ed; padding:10px 16px; white-space:nowrap;">
       <div style="display:flex; align-items:center; justify-content:space-evenly; flex-wrap:nowrap; gap:16px 24px; text-align:center; white-space:nowrap;">
         <div style="display:inline-flex; align-items:center; gap:8px; white-space:nowrap;">
-          <span style="color:var(--text-muted); font-size:0.88rem; font-weight:600;">전교 총 학부모 수:</span>
+          <span style="color:var(--text-muted); font-size:0.88rem; font-weight:600;">총 참석 학부모 수:</span>
           <strong style="color:var(--green-700); font-size:1.02rem; font-weight:800;">${grandTotalParents.toLocaleString()}명</strong>
         </div>
         <span style="color:#bddbc8; font-weight:300;" class="total-metric-divider">|</span>
         <div style="display:inline-flex; align-items:center; gap:8px; white-space:nowrap;">
-          <span style="color:var(--text-muted); font-size:0.88rem; font-weight:600;">전교 학생 출석 / 정원:</span>
+          <span style="color:var(--text-muted); font-size:0.88rem; font-weight:600;">참석 가구수 / 학생 정원:</span>
           <strong style="color:var(--green-700); font-size:0.96rem; font-weight:700;">${grandTotalStudents.toLocaleString()} / ${grandTotalCap.toLocaleString()}명</strong>
         </div>
         <span style="color:#bddbc8; font-weight:300;" class="total-metric-divider">|</span>
@@ -2071,12 +2082,13 @@ async function exportStatsAsPdf() {
 
   showToast('통계 현황 PDF 문서를 생성하는 중입니다...');
 
-  const printHeader = document.getElementById('print-report-header');
-  const editBtn = document.getElementById('btn-matrix-edit-cap');
-
   try {
-    if (printHeader) printHeader.style.display = 'block';
-    if (editBtn) editBtn.style.display = 'none';
+    // 1. Activate dedicated PDF export mode for wide, edge-to-edge landscape A4 optimization
+    document.body.classList.add('pdf-export-active');
+    renderAdminCharts();
+
+    // Allow DOM, layout, and D3 SVGs to adjust to the wide 1600px container width
+    await new Promise((resolve) => setTimeout(resolve, 120));
 
     const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
       import('html2canvas'),
@@ -2088,11 +2100,9 @@ async function exportStatsAsPdf() {
       useCORS: true,
       backgroundColor: '#ffffff',
       logging: false,
-      windowWidth: 1280
+      windowWidth: 1650,
+      width: 1600
     });
-
-    if (printHeader) printHeader.style.display = '';
-    if (editBtn) editBtn.style.display = '';
 
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF({
@@ -2103,19 +2113,29 @@ async function exportStatsAsPdf() {
 
     const pageWidth = 297;
     const pageHeight = 210;
-    const margin = 10;
-    const maxContentWidth = pageWidth - margin * 2;
-    const maxContentHeight = pageHeight - margin * 2;
+
+    // Ultra-tight 3.0mm margins on left and right so content fills 291mm of 297mm (98.0% width coverage!)
+    const marginX = 3.0;
+    const marginY = 5.0;
+    const maxContentWidth = pageWidth - marginX * 2; // 291mm
+    const maxContentHeight = pageHeight - marginY * 2; // 200mm
 
     const imgWidth = canvas.width;
     const imgHeight = canvas.height;
-    const ratio = Math.min(maxContentWidth / imgWidth, maxContentHeight / imgHeight);
 
-    const printWidth = imgWidth * ratio;
-    const printHeight = imgHeight * ratio;
+    // Prioritize filling the full width of the landscape page, adjusting height within page bounds
+    let ratio = maxContentWidth / imgWidth;
+    let printWidth = maxContentWidth;
+    let printHeight = imgHeight * ratio;
+
+    if (printHeight > maxContentHeight) {
+      ratio = maxContentHeight / imgHeight;
+      printWidth = imgWidth * ratio;
+      printHeight = maxContentHeight;
+    }
 
     const x = (pageWidth - printWidth) / 2;
-    const y = margin;
+    const y = Math.max(marginY, (pageHeight - printHeight) / 2);
 
     pdf.addImage(imgData, 'PNG', x, y, printWidth, printHeight);
 
@@ -2125,11 +2145,13 @@ async function exportStatsAsPdf() {
     pdf.save(filename);
     showToast('통계현황 PDF가 성공적으로 저장되었습니다.');
   } catch (err) {
-    if (printHeader) printHeader.style.display = '';
-    if (editBtn) editBtn.style.display = '';
     console.error('Failed to generate PDF via html2canvas', err);
     showToast('PDF 인쇄 창을 실행합니다...');
     window.print();
+  } finally {
+    // 2. Always restore normal on-screen layout and charts immediately
+    document.body.classList.remove('pdf-export-active');
+    renderAdminCharts();
   }
 }
 
